@@ -1,0 +1,212 @@
+# If we are not building as a part of LLVM, build Vlang as an
+# standalone project, using LLVM as an external library:
+if( CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
+  project(Vlang)
+  cmake_minimum_required(VERSION 2.8)
+
+  set(VLANG_PATH_TO_LLVM_SOURCE "" CACHE PATH
+    "Path to LLVM source code. Not necessary if using an installed LLVM.")
+  set(VLANG_PATH_TO_LLVM_BUILD "" CACHE PATH
+    "Path to the directory where LLVM was built or installed.")
+
+  if( VLANG_PATH_TO_LLVM_SOURCE )
+    if( NOT EXISTS "${VLANG_PATH_TO_LLVM_SOURCE}/cmake/config-ix.cmake" )
+      message(FATAL_ERROR "Please set VLANG_PATH_TO_LLVM_SOURCE to the root directory of LLVM source code.")
+    else()
+      get_filename_component(LLVM_MAIN_SRC_DIR ${VLANG_PATH_TO_LLVM_SOURCE}
+	ABSOLUTE)
+      list(APPEND CMAKE_MODULE_PATH "${LLVM_MAIN_SRC_DIR}/cmake/modules")
+    endif()
+  endif()
+
+  list(APPEND CMAKE_MODULE_PATH "${VLANG_PATH_TO_LLVM_BUILD}/share/llvm/cmake")
+
+  get_filename_component(PATH_TO_LLVM_BUILD ${VLANG_PATH_TO_LLVM_BUILD}
+    ABSOLUTE)
+
+  include(AddLLVM)
+  include("${VLANG_PATH_TO_LLVM_BUILD}/share/llvm/cmake/LLVMConfig.cmake")
+  include(HandleLLVMOptions)
+
+  set(PACKAGE_VERSION "${LLVM_PACKAGE_VERSION}")
+
+  set(LLVM_MAIN_INCLUDE_DIR "${LLVM_MAIN_SRC_DIR}/include")
+  set(LLVM_BINARY_DIR ${CMAKE_BINARY_DIR})
+
+  set(CMAKE_INCLUDE_CURRENT_DIR ON)
+  include_directories("${PATH_TO_LLVM_BUILD}/include" "${LLVM_MAIN_INCLUDE_DIR}")
+  link_directories("${PATH_TO_LLVM_BUILD}/lib")
+
+  # Define the default arguments to use with 'lit', and an option for the user
+  # to override.
+  set(LIT_ARGS_DEFAULT "-sv")
+  if (MSVC OR XCODE)
+    set(LIT_ARGS_DEFAULT "${LIT_ARGS_DEFAULT} --no-progress-bar")
+  endif()
+  set(LLVM_LIT_ARGS "${LIT_ARGS_DEFAULT}" CACHE STRING "Default options for lit")
+
+  set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
+  set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
+  set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
+
+  set( VLANG_BUILT_STANDALONE 1 )
+endif()
+
+set(VLANG_RESOURCE_DIR "" CACHE STRING
+  "Relative directory from the Vlang binary to its resource files.")
+
+set(C_INCLUDE_DIRS "" CACHE STRING
+  "Colon separated list of directories vlang will search for headers.")
+
+set(GCC_INSTALL_PREFIX "" CACHE PATH "Directory where gcc is installed." )
+set(DEFAULT_SYSROOT "" CACHE PATH
+  "Default <path> to all compiler invocations for --sysroot=<path>." )
+
+set(VLANG_VENDOR "" CACHE STRING
+  "Vendor-specific text for showing with version information.")
+
+if( VLANG_VENDOR )
+  add_definitions( -DVLANG_VENDOR="${VLANG_VENDOR} " )
+endif()
+
+set(VLANG_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(VLANG_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
+
+if( CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR AND NOT MSVC_IDE )
+  message(FATAL_ERROR "In-source builds are not allowed. CMake would overwrite "
+"the makefiles distributed with LLVM. Please create a directory and run cmake "
+"from there, passing the path to this source directory as the last argument. "
+"This process created the file `CMakeCache.txt' and the directory "
+"`CMakeFiles'. Please delete them.")
+endif()
+
+if( NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR )
+  file(GLOB_RECURSE
+    tablegenned_files_on_include_dir
+    "${VLANG_SOURCE_DIR}/include/vlang/*.inc")
+  if( tablegenned_files_on_include_dir )
+    message(FATAL_ERROR "Apparently there is a previous in-source build, "
+"probably as the result of running `configure' and `make' on "
+"${VLANG_SOURCE_DIR}. This may cause problems. The suspicious files are:\n"
+"${tablegenned_files_on_include_dir}\nPlease clean the source directory.")
+  endif()
+endif()
+
+# Compute the Vlang version from the LLVM version.
+string(REGEX MATCH "[0-9]+\\.[0-9]+(\\.[0-9]+)?" VLANG_VERSION
+  ${PACKAGE_VERSION})
+message(STATUS "Vlang version: ${VLANG_VERSION}")
+
+string(REGEX REPLACE "([0-9]+)\\.[0-9]+(\\.[0-9]+)?" "\\1" VLANG_VERSION_MAJOR
+  ${VLANG_VERSION})
+string(REGEX REPLACE "[0-9]+\\.([0-9]+)(\\.[0-9]+)?" "\\1" VLANG_VERSION_MINOR
+  ${VLANG_VERSION})
+if (${VLANG_VERSION} MATCHES "[0-9]+\\.[0-9]+\\.[0-9]+")
+  set(VLANG_HAS_VERSION_PATCHLEVEL 1)
+  string(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" VLANG_VERSION_PATCHLEVEL
+    ${VLANG_VERSION})
+else()
+  set(VLANG_HAS_VERSION_PATCHLEVEL 0)
+endif()
+
+# Add appropriate flags for GCC
+if (LLVM_COMPILER_IS_GCC_COMPATIBLE)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common -Woverloaded-virtual -Wcast-qual -fno-strict-aliasing -pedantic -Wno-long-long -Wall -W -Wno-unused-parameter -Wwrite-strings")
+endif ()
+
+if (APPLE)
+  set(CMAKE_MODULE_LINKER_FLAGS "-Wl,-flat_namespace -Wl,-undefined -Wl,suppress")
+endif ()
+
+include(LLVMParseArguments)
+
+macro(add_vlang_library name)
+  llvm_process_sources(srcs ${ARGN})
+  if(MSVC_IDE OR XCODE)
+    string( REGEX MATCHALL "/[^/]+" split_path ${CMAKE_CURRENT_SOURCE_DIR})
+    list( GET split_path -1 dir)
+    file( GLOB_RECURSE headers
+      ../include/*.h
+      ../include/*.td
+      ../include/*.def)
+    set(srcs ${srcs} ${headers})
+  endif(MSVC_IDE OR XCODE)
+  if (MODULE)
+    set(libkind MODULE)
+  elseif (SHARED_LIBRARY)
+    set(libkind SHARED)
+  else()
+    set(libkind)
+  endif()
+  add_library( ${name} ${libkind} ${srcs} )
+  if( LLVM_COMMON_DEPENDS )
+    add_dependencies( ${name} ${LLVM_COMMON_DEPENDS} )
+  endif( LLVM_COMMON_DEPENDS )
+
+  llvm_config( ${name} ${LLVM_LINK_COMPONENTS} )
+  target_link_libraries( ${name} ${LLVM_COMMON_LIBS} )
+  link_system_libs( ${name} )
+
+  install(TARGETS ${name}
+    LIBRARY DESTINATION lib${LLVM_LIBDIR_SUFFIX}
+    ARCHIVE DESTINATION lib${LLVM_LIBDIR_SUFFIX}
+    RUNTIME DESTINATION bin)
+  set_target_properties(${name} PROPERTIES FOLDER "Vlang libraries")
+endmacro(add_vlang_library)
+
+macro(add_vlang_executable name)
+  add_llvm_executable( ${name} ${ARGN} )
+  set_target_properties(${name} PROPERTIES FOLDER "Vlang executables")
+endmacro(add_vlang_executable)
+
+include_directories(BEFORE
+  ${CMAKE_CURRENT_BINARY_DIR}/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
+  )
+
+install(DIRECTORY include/
+  DESTINATION include
+  FILES_MATCHING
+  PATTERN "*.def"
+  PATTERN "*.h"
+  PATTERN "config.h" EXCLUDE
+  PATTERN ".svn" EXCLUDE
+  )
+
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/
+  DESTINATION include
+  FILES_MATCHING
+  PATTERN "CMakeFiles" EXCLUDE
+  PATTERN "*.inc"
+  )
+
+add_definitions( -D_GNU_SOURCE )
+
+# Vlang version information
+set(VLANG_EXECUTABLE_VERSION
+     "${VLANG_VERSION_MAJOR}.${VLANG_VERSION_MINOR}" CACHE STRING
+    "Version number that will be placed into the vlang executable, in the form XX.YY")
+set(LIBVLANG_LIBRARY_VERSION
+     "${VLANG_VERSION_MAJOR}.${VLANG_VERSION_MINOR}" CACHE STRING
+    "Version number that will be placed into the libvlang library , in the form XX.YY")
+mark_as_advanced(VLANG_EXECUTABLE_VERSION LIBVLANG_LIBRARY_VERSION)
+
+#add_subdirectory(include)
+add_subdirectory(lib)
+add_subdirectory(tools)
+
+# TODO: docs.
+#add_subdirectory(test)
+
+# Workaround for MSVS10 to avoid the Dialog Hell
+# FIXME: This could be removed with future version of CMake.
+if( VLANG_BUILT_STANDALONE AND MSVC_VERSION EQUAL 1600 )
+  set(VLANG_SLN_FILENAME "${CMAKE_CURRENT_BINARY_DIR}/Vlang.sln")
+  if( EXISTS "${VLANG_SLN_FILENAME}" )
+    file(APPEND "${VLANG_SLN_FILENAME}" "\n# This should be regenerated!\n")
+  endif()
+endif()
+
+set(BUG_REPORT_URL "http://llvm.org/bugs/" CACHE STRING
+  "Default URL where bug reports are to be submitted.")
+
