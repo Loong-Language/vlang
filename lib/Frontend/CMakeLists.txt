@@ -1,0 +1,31 @@
+add_vlang_library(vlangFrontend
+  ChainedDiagnosticConsumer.cpp
+  DiagnosticRenderer.cpp
+  HeaderIncludeGen.cpp
+  InitHeaderSearch.cpp
+  InitPreprocessor.cpp
+  LogDiagnosticPrinter.cpp
+  SerializedDiagnosticPrinter.cpp
+  TextDiagnostic.cpp
+  TextDiagnosticBuffer.cpp
+  TextDiagnosticPrinter.cpp
+  VerifyDiagnosticConsumer.cpp
+  )
+
+add_dependencies(vlangFrontend
+  VlangAttrClasses
+  VlangAttrList
+  VlangAttrParsedAttrList
+  VlangCommentNodes
+  VlangDeclNodes
+  VlangDiagnosticCommon
+  VlangDiagnosticDriver
+  VlangDiagnosticFrontend
+  VlangDiagnosticLex
+  VlangDriverOptions
+  )
+
+target_link_libraries(vlangFrontend
+  vlangBasic
+  vlangLex
+  )

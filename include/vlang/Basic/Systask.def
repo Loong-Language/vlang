@@ -1,0 +1,67 @@
+//===--- Systask.def - Systask function info database ----------*- C++ -*-===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+//
+// This file defines the standard systask function database.  Users of this file
+// must define the BUILTIN macro to make use of this information.
+//
+//===----------------------------------------------------------------------===//
+
+// FIXME: This should really be a .td file, but that requires modifying tblgen.
+// Perhaps tblgen should have plugins.
+
+// The first value provided to the macro specifies the function name of the
+// systask, and results in a vlang::systask::STXX enum value for XX.
+
+// The second value provided to the macro specifies the type of the function
+// (result value, then each argument) as follows:
+//  v -> void
+//  b -> boolean
+//  s -> string
+//  i -> int
+//  r -> real
+//  P -> FILE
+//  . -> "...".  This may only occur at the end of the function list.
+//
+// Types may be prefixed with the following modifiers:
+//  S   -> signed
+//  U   -> unsigned
+//  I   -> Required to constant fold to an integer constant expression.
+//
+// Types may be postfixed with the following modifiers:
+// * -> pointer (optionally followed by an address space number)
+// & -> reference (optionally followed by an address space number)
+// C -> const
+// D -> volatile
+
+// The third value provided to the macro specifies information about attributes
+// of the function.  These must be kept in sync with the predicates in the
+// Builtin::Context class.  Currently we have:
+//  r -> noreturn
+//  c -> const
+//  p:N: -> this is a printf-like function whose Nth argument is the format
+//          string.
+//  s:N: -> this is a scanf-like function whose Nth argument is the format
+//          string.
+//  u -> arguments are not evaluated for their side-effects
+
+
+// IEEE-1364 2001 Verilog
+//   17.1 Display System Tasks
+SYSTASK(display,    "s.",    "p:1", ALL_LANGUAGES)
+SYSTASK(displayb,   "s.",    "p:1", ALL_LANGUAGES)
+SYSTASK(displayo,   "s.",    "p:1", ALL_LANGUAGES)
+SYSTASK(displayh,   "s.",    "p:1", ALL_LANGUAGES)
+SYSTASK(write,      "s.",    "p:1", ALL_LANGUAGES)
+SYSTASK(writeb,     "s.",    "p:1", ALL_LANGUAGES)
+SYSTASK(writeo,     "s.",    "p:1", ALL_LANGUAGES)
+SYSTASK(writeh,     "s.",    "p:1", ALL_LANGUAGES)
+
+//   17.2 File IO
+
+#undef SYSTASK

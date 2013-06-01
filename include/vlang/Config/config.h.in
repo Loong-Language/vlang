@@ -1,0 +1,24 @@
+/* include/vlang/Config/config.h.in. */
+
+#ifndef CONFIG_H
+#define CONFIG_H
+
+/* Bug report URL. */
+#undef BUG_REPORT_URL
+
+/* Relative directory for resource files */
+#undef VLANG_RESOURCE_DIR
+
+/* Directories vlang will search for headers */
+#undef C_INCLUDE_DIRS
+
+/* Linker version detected at compile time. */
+#undef HOST_LINK_VERSION
+
+/* Default <path> to all compiler invocations for --sysroot=<path>. */
+#undef DEFAULT_SYSROOT
+
+/* Directory where gcc is installed. */
+#undef GCC_INSTALL_PREFIX
+
+#endif

@@ -19,12 +19,21 @@ if( CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
     endif()
   endif()
 
+  if( NOT EXISTS "${VLANG_PATH_TO_LLVM_BUILD}/bin/llvm-tblgen${CMAKE_EXECUTABLE_SUFFIX}" )
+    # Looking for bin/Debug/llvm-tblgen is a complete hack. How can we get
+    # around this?
+    if( NOT EXISTS "${VLANG_PATH_TO_LLVM_BUILD}/bin/Debug/llvm-tblgen${CMAKE_EXECUTABLE_SUFFIX}" )
+      message(FATAL_ERROR "Please set VLANG_PATH_TO_LLVM_BUILD to a directory containing a LLVM build.")
+    endif()
+  endif()
+
   list(APPEND CMAKE_MODULE_PATH "${VLANG_PATH_TO_LLVM_BUILD}/share/llvm/cmake")
 
   get_filename_component(PATH_TO_LLVM_BUILD ${VLANG_PATH_TO_LLVM_BUILD}
     ABSOLUTE)
 
   include(AddLLVM)
+  include(TableGen)
   include("${VLANG_PATH_TO_LLVM_BUILD}/share/llvm/cmake/LLVMConfig.cmake")
   include(HandleLLVMOptions)
 
@@ -36,6 +45,13 @@ if( CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
   set(CMAKE_INCLUDE_CURRENT_DIR ON)
   include_directories("${PATH_TO_LLVM_BUILD}/include" "${LLVM_MAIN_INCLUDE_DIR}")
   link_directories("${PATH_TO_LLVM_BUILD}/lib")
+
+  if( EXISTS "${VLANG_PATH_TO_LLVM_BUILD}/bin/llvm-tblgen${CMAKE_EXECUTABLE_SUFFIX}" )
+    set(LLVM_TABLEGEN_EXE "${PATH_TO_LLVM_BUILD}/bin/llvm-tblgen${CMAKE_EXECUTABLE_SUFFIX}")
+  else()
+    # FIXME: This is an utter hack.
+    set(LLVM_TABLEGEN_EXE "${PATH_TO_LLVM_BUILD}/bin/Debug/llvm-tblgen${CMAKE_EXECUTABLE_SUFFIX}")
+  endif()
 
   # Define the default arguments to use with 'lit', and an option for the user
   # to override.
@@ -50,6 +66,11 @@ if( CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
   set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
 
   set( VLANG_BUILT_STANDALONE 1 )
+
+  find_package(LibXml2)
+  if (LIBXML2_FOUND)
+    set(VLANG_HAVE_LIBXML 1)
+  endif ()
 endif()
 
 set(VLANG_RESOURCE_DIR "" CACHE STRING
@@ -111,25 +132,81 @@ endif()
 
 # Add appropriate flags for GCC
 if (LLVM_COMPILER_IS_GCC_COMPATIBLE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common -Woverloaded-virtual -Wcast-qual -fno-strict-aliasing -pedantic -Wno-long-long -Wall -W -Wno-unused-parameter -Wwrite-strings")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common -Woverloaded-virtual -Wcast-qual -fno-strict-aliasing")
+
+  # Enable -pedantic for Vlang even if it's not enabled for LLVM.
+  if (NOT LLVM_ENABLE_PEDANTIC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wno-long-long")
+  endif ()
+
+  check_cxx_compiler_flag("-Werror -Wnested-anon-types" CXX_SUPPORTS_NO_NESTED_ANON_TYPES_FLAG)
+  if( CXX_SUPPORTS_NO_NESTED_ANON_TYPES_FLAG )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nested-anon-types" )
+  endif()
 endif ()
 
 if (APPLE)
   set(CMAKE_MODULE_LINKER_FLAGS "-Wl,-flat_namespace -Wl,-undefined -Wl,suppress")
 endif ()
 
+configure_file(
+  ${VLANG_SOURCE_DIR}/include/vlang/Config/config.h.cmake
+  ${VLANG_BINARY_DIR}/include/vlang/Config/config.h)
+
 include(LLVMParseArguments)
+
+function(vlang_tablegen)
+  # Syntax:
+  # vlang_tablegen output-file [tablegen-arg ...] SOURCE source-file
+  # [[TARGET cmake-target-name] [DEPENDS extra-dependency ...]]
+  #
+  # Generates a custom command for invoking tblgen as
+  #
+  # tblgen source-file -o=output-file tablegen-arg ...
+  #
+  # and, if cmake-target-name is provided, creates a custom target for
+  # executing the custom command depending on output-file. It is
+  # possible to list more files to depend after DEPENDS.
+
+  parse_arguments( CTG "SOURCE;TARGET;DEPENDS" "" ${ARGN} )
+
+  if( NOT CTG_SOURCE )
+    message(FATAL_ERROR "SOURCE source-file required by vlang_tablegen")
+  endif()
+
+  set( LLVM_TARGET_DEFINITIONS ${CTG_SOURCE} )
+  tablegen( VLANG ${CTG_DEFAULT_ARGS} )
+
+  list( GET CTG_DEFAULT_ARGS 0 output_file )
+  if( CTG_TARGET )
+    add_custom_target( ${CTG_TARGET} DEPENDS ${output_file} ${CTG_DEPENDS} )
+    set_target_properties( ${CTG_TARGET} PROPERTIES FOLDER "Vlang tablegenning")
+  endif()
+endfunction(vlang_tablegen)
 
 macro(add_vlang_library name)
   llvm_process_sources(srcs ${ARGN})
   if(MSVC_IDE OR XCODE)
-    string( REGEX MATCHALL "/[^/]+" split_path ${CMAKE_CURRENT_SOURCE_DIR})
-    list( GET split_path -1 dir)
-    file( GLOB_RECURSE headers
-      ../include/*.h
-      ../include/*.td
-      ../include/*.def)
-    set(srcs ${srcs} ${headers})
+    # Add public headers
+    file(RELATIVE_PATH lib_path
+      ${VLANG_SOURCE_DIR}/lib/
+      ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+    if(NOT lib_path MATCHES "^[.][.]")
+      file( GLOB_RECURSE headers
+        ${VLANG_SOURCE_DIR}/include/vlang/${lib_path}/*.h
+        ${VLANG_SOURCE_DIR}/include/vlang/${lib_path}/*.def
+      )
+      set_source_files_properties(${headers} PROPERTIES HEADER_FILE_ONLY ON)
+
+      file( GLOB_RECURSE tds
+        ${VLANG_SOURCE_DIR}/include/vlang/${lib_path}/*.td
+      )
+      source_group("TableGen descriptions" FILES ${tds})
+      set_source_files_properties(${tds}} PROPERTIES HEADER_FILE_ONLY ON)
+
+      set(srcs ${srcs} ${headers} ${tds})
+    endif()
   endif(MSVC_IDE OR XCODE)
   if (MODULE)
     set(libkind MODULE)
@@ -180,7 +257,15 @@ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/
   PATTERN "*.inc"
   )
 
+  # Configure the Version.inc file.
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/vlang/Basic/Version.inc.in
+  ${CMAKE_CURRENT_BINARY_DIR}/include/vlang/Basic/Version.inc)
+  
 add_definitions( -D_GNU_SOURCE )
+
+# FIXME: They should be options.
+add_definitions(-DVLANG_ENABLE_ARCMT -DVLANG_ENABLE_REWRITER -DVLANG_ENABLE_STATIC_ANALYZER)
 
 # Vlang version information
 set(VLANG_EXECUTABLE_VERSION
@@ -191,12 +276,17 @@ set(LIBVLANG_LIBRARY_VERSION
     "Version number that will be placed into the libvlang library , in the form XX.YY")
 mark_as_advanced(VLANG_EXECUTABLE_VERSION LIBVLANG_LIBRARY_VERSION)
 
-#add_subdirectory(include)
+add_subdirectory(utils/TableGen)
+
+add_subdirectory(include)
 add_subdirectory(lib)
 add_subdirectory(tools)
 
+option(VLANG_INCLUDE_TESTS
+       "Generate build targets for the Vlang unit tests."
+       ${LLVM_INCLUDE_TESTS})
+
 # TODO: docs.
-#add_subdirectory(test)
 
 # Workaround for MSVS10 to avoid the Dialog Hell
 # FIXME: This could be removed with future version of CMake.
