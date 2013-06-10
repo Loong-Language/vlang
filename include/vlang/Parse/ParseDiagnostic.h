@@ -10,7 +10,7 @@
 #ifndef LLVM_VLANG_DIAGNOSTICPARSE_H
 #define LLVM_VLANG_DIAGNOSTICPARSE_H
 
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 
 namespace vlang {
   namespace diag {
@@ -18,7 +18,7 @@ namespace vlang {
 #define DIAG(ENUM,FLAGS,DEFAULT_MAPPING,DESC,GROUP,\
              SFINAE,ACCESS,NOWERROR,SHOWINSYSHEADER,CATEGORY) ENUM,
 #define PARSESTART
-#include "vlang/Basic/DiagnosticParseKinds.inc"
+#include "vlang/Diag/DiagnosticParseKinds.inc"
 #undef DIAG
       NUM_BUILTIN_PARSE_DIAGNOSTICS
     };

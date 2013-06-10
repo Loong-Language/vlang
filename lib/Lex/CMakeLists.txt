@@ -28,4 +28,5 @@ add_dependencies(vlangLex
 
 target_link_libraries(vlangLex
   vlangBasic
+  vlangDiag
   )

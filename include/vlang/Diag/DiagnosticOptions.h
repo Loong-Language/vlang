@@ -38,14 +38,14 @@ public:
   // Define simple diagnostic options (with no accessors).
 #define DIAGOPT(Name, Bits, Default) unsigned Name : Bits;
 #define ENUM_DIAGOPT(Name, Type, Bits, Default)
-#include "vlang/Basic/DiagnosticOptions.def"
+#include "vlang/Diag/DiagnosticOptions.def"
 
 protected:
   // Define diagnostic options of enumeration type. These are private, and will
   // have accessors (below).
 #define DIAGOPT(Name, Bits, Default)
 #define ENUM_DIAGOPT(Name, Type, Bits, Default) unsigned Name : Bits;
-#include "vlang/Basic/DiagnosticOptions.def"
+#include "vlang/Diag/DiagnosticOptions.def"
 
 public:
   /// \brief The file to log diagnostic output to.
@@ -64,12 +64,12 @@ public:
 #define ENUM_DIAGOPT(Name, Type, Bits, Default) \
   Type get##Name() const { return static_cast<Type>(Name); } \
   void set##Name(Type Value) { Name = static_cast<unsigned>(Value); }
-#include "vlang/Basic/DiagnosticOptions.def"
+#include "vlang/Diag/DiagnosticOptions.def"
 
   DiagnosticOptions() {
 #define DIAGOPT(Name, Bits, Default) Name = Default;
 #define ENUM_DIAGOPT(Name, Type, Bits, Default) set##Name(Default);
-#include "vlang/Basic/DiagnosticOptions.def"
+#include "vlang/Diag/DiagnosticOptions.def"
   }
 };
 

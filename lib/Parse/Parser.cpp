@@ -147,7 +147,7 @@ bool Parser::ExpectAndConsumeSemi(unsigned DiagID) {
   return ExpectAndConsume(tok::semi, DiagID);
 }
 
-void Parser::ConsumeExtraSemi(ExtraSemiKind Kind, unsigned TST) {
+void Parser::ConsumeExtraSemi(ExtraSemiKind Kind) {
   if (Tok.isNot(tok::semi)) return;
 
   bool HadMultipleSemis = false;
@@ -396,6 +396,13 @@ SourceLocation Parser::handleUnexpectedCodeCompletionToken() {
 bool Parser::ParseDescription()
 {
    assert(Tok.isNot(tok::eof));
+   const tok::TokenKind TokArray[] = {
+      tok::kw_program,
+      tok::kw_module,
+      tok::kw_interface,
+      tok::kw_macromodule
+   };
+
 
    switch( Tok.getKind()) {
    case tok::kw_program:
@@ -406,9 +413,9 @@ bool Parser::ParseDescription()
       break;
 
    default:
-      printf("ERROR: Invalid description item\n");
+      Diag(Tok, diag::err_expected_top_decl);
       //process_error();
-      ConsumeToken();
+      SkipUntil(tok::kw_program, tok::kw_module, tok::kw_interface, false, true, false);
       break;
    }
    return true;

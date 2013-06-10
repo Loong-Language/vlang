@@ -11,11 +11,11 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include "vlang/Diag/Diagnostic.h"
+#include "vlang/Diag/DiagnosticOptions.h"
+#include "vlang/Diag/PartialDiagnostic.h"
 #include "vlang/Basic/CharInfo.h"
-#include "vlang/Basic/Diagnostic.h"
-#include "vlang/Basic/DiagnosticOptions.h"
 #include "vlang/Basic/IdentifierTable.h"
-#include "vlang/Basic/PartialDiagnostic.h"
 #include "llvm/ADT/SmallString.h"
 #include "llvm/ADT/StringExtras.h"
 #include "llvm/Support/CrashRecoveryContext.h"

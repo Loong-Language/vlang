@@ -14,14 +14,10 @@
 
 using namespace vlang;
 
-const SanitizerOptions SanitizerOptions::Disabled = {};
-
 LangOptions::LangOptions() {
 #define LANGOPT(Name, Bits, Default, Description) Name = Default;
 #define ENUM_LANGOPT(Name, Type, Bits, Default, Description) set##Name(Default);
 #include "vlang/Basic/LangOptions.def"
-
-  Sanitize = SanitizerOptions::Disabled;
 }
 
 void LangOptions::resetNonModularOptions() {
@@ -31,8 +27,5 @@ void LangOptions::resetNonModularOptions() {
   Name = Default;
 #include "vlang/Basic/LangOptions.def"
 
-  // FIXME: This should not be reset; modules can be different with different
-  // sanitizer options (this affects __has_feature(address_sanitizer) etc).
-  Sanitize = SanitizerOptions::Disabled;
 }
 

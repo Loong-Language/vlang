@@ -10,7 +10,7 @@
 #ifndef LLVM_VLANG_DIAGNOSTICLEX_H
 #define LLVM_VLANG_DIAGNOSTICLEX_H
 
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 
 namespace vlang {
   namespace diag {
@@ -18,7 +18,7 @@ namespace vlang {
 #define DIAG(ENUM,FLAGS,DEFAULT_MAPPING,DESC,GROUP,\
              SFINAE,ACCESS,NOWERROR,SHOWINSYSHEADER,CATEGORY) ENUM,
 #define LEXSTART
-#include "vlang/Basic/DiagnosticLexKinds.inc"
+#include "vlang/Diag/DiagnosticLexKinds.inc"
 #undef DIAG
       NUM_BUILTIN_LEX_DIAGNOSTICS
     };

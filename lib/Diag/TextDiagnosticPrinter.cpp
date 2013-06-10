@@ -11,11 +11,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "vlang/Frontend/TextDiagnosticPrinter.h"
-#include "vlang/Basic/DiagnosticOptions.h"
+#include "vlang/Diag/TextDiagnosticPrinter.h"
+#include "vlang/Diag/DiagnosticOptions.h"
+#include "vlang/Diag/TextDiagnostic.h"
 #include "vlang/Basic/FileManager.h"
 #include "vlang/Basic/SourceManager.h"
-#include "vlang/Frontend/TextDiagnostic.h"
 #include "vlang/Lex/Lexer.h"
 #include "llvm/ADT/SmallString.h"
 #include "llvm/Support/ErrorHandling.h"

@@ -13,7 +13,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "vlang/Basic/TargetInfo.h"
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 #include "vlang/Basic/LangOptions.h"
 #include "vlang/Basic/MacroBuilder.h"
 #include "vlang/Basic/TargetOptions.h"
@@ -50,12 +50,6 @@ public:
 };
 } // end anonymous namespace
 
-
-static void getDarwinDefines(MacroBuilder &Builder, const LangOptions &Opts,
-                             const llvm::Triple &Triple,
-                             StringRef &PlatformName,
-                             VersionTuple &PlatformMinVersion) {
-}
 
 //===----------------------------------------------------------------------===//
 // Specific target implementations.

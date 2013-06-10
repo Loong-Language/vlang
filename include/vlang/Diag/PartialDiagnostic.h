@@ -16,7 +16,7 @@
 #ifndef LLVM_VLANG_PARTIALDIAGNOSTIC_H
 #define LLVM_VLANG_PARTIALDIAGNOSTIC_H
 
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 #include "vlang/Basic/SourceLocation.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/Support/Compiler.h"

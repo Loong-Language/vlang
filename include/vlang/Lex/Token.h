@@ -16,7 +16,6 @@
 
 #include "vlang/Basic/OperatorKinds.h"
 #include "vlang/Basic/SourceLocation.h"
-#include "vlang/Basic/TemplateKinds.h"
 #include "vlang/Basic/TokenKinds.h"
 #include <cstdlib>
 

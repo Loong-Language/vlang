@@ -11,11 +11,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "vlang/Frontend/VerifyDiagnosticConsumer.h"
+#include "vlang/Diag/VerifyDiagnosticConsumer.h"
+#include "vlang/Frontend/FrontendDiagnostic.h"
+#include "vlang/Diag/TextDiagnosticBuffer.h"
 #include "vlang/Basic/CharInfo.h"
 #include "vlang/Basic/FileManager.h"
-#include "vlang/Frontend/FrontendDiagnostic.h"
-#include "vlang/Frontend/TextDiagnosticBuffer.h"
 #include "vlang/Lex/HeaderSearch.h"
 #include "vlang/Lex/Preprocessor.h"
 #include <llvm/ADT/SmallString.h>

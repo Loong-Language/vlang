@@ -17,75 +17,42 @@
 #define LLVM_VLANG_BASIC_SPECIFIERS_H
 
 namespace vlang {
-  /// \brief Specifies the width of a type, e.g., short, long, or long long.
-  enum TypeSpecifierWidth {
-    TSW_unspecified,
-    TSW_short,
-    TSW_long,
-    TSW_longlong
+
+   /// \brief Specifies the data type category
+   enum class TypeDataCategory {
+      TDC_singular,
+      TDC_aggregate
+   };
+
+   enum class TypeDataObject {
+      TDO_variable,
+      TDO_net
+   };
+
+   /// \brief Specifies the number of states for each bit
+  enum class TypeDataState{
+     TDS_2state, // Verilog 2-state per-bit (0, 1)
+     TDS_3state, // Internal 3-state per-bit (0, 1, X)
+     TDS_4state  // Verilog 4-state per-bit (0, 1, X, Z)
   };
-  
+
   /// \brief Specifies the signedness of a type, e.g., signed or unsigned.
-  enum TypeSpecifierSign {
+  enum class TypeSpecifierSign {
     TSS_unspecified,
     TSS_signed,
     TSS_unsigned
   };
   
   /// \brief Specifies the kind of type.
-  enum TypeSpecifierType {
+  enum class TypeSpecifierType {
     TST_unspecified,
     TST_void,
-    TST_char,
-    TST_wchar,        // C++ wchar_t
-    TST_char16,       // C++11 char16_t
-    TST_char32,       // C++11 char32_t
-    TST_int,
-    TST_int128,
-    TST_half,         // OpenCL half, ARM NEON __fp16
-    TST_float,
-    TST_double,
-    TST_bool,         // _Bool
-    TST_decimal32,    // _Decimal32
-    TST_decimal64,    // _Decimal64
-    TST_decimal128,   // _Decimal128
-    TST_enum,
-    TST_union,
-    TST_struct,
-    TST_class,        // C++ class type
-    TST_interface,    // C++ (Microsoft-specific) __interface type
-    TST_typename,     // Typedef, C++ class-name or enum name, etc.
-    TST_typeofType,
-    TST_typeofExpr,
-    TST_decltype,         // C++11 decltype
-    TST_underlyingType,   // __underlying_type for C++11
-    TST_auto,             // C++11 auto
-    TST_decltype_auto,    // C++1y decltype(auto)
-    TST_unknown_anytype,  // __unknown_anytype extension
-    TST_atomic,           // C11 _Atomic
-    TST_image1d_t,        // OpenCL image1d_t
-    TST_image1d_array_t,  // OpenCL image1d_array_t
-    TST_image1d_buffer_t, // OpenCL image1d_buffer_t
-    TST_image2d_t,        // OpenCL image2d_t
-    TST_image2d_array_t,  // OpenCL image2d_array_t
-    TST_image3d_t,        // OpenCL image3d_t
-    TST_sampler_t,        // OpenCL sampler_t
-    TST_event_t,          // OpenCL event_t
     TST_error         // erroneous type
   };
-  
-  /// \brief Structure that packs information about the type specifiers that
-  /// were written in a particular type specifier sequence.
-  struct WrittenBuiltinSpecs {
-    /*DeclSpec::TST*/ unsigned Type  : 6;
-    /*DeclSpec::TSS*/ unsigned Sign  : 2;
-    /*DeclSpec::TSW*/ unsigned Width : 2;
-    bool ModeAttr : 1;
-  };  
 
   /// \brief A C++ access specifier (public, private, protected), plus the
   /// special value "none" which means different things in different contexts.
-  enum AccessSpecifier {
+  enum class AccessSpecifier {
     AS_public,
     AS_protected,
     AS_private,
@@ -94,7 +61,7 @@ namespace vlang {
 
   /// \brief The categorization of expression values, currently following the
   /// C++11 scheme.
-  enum ExprValueKind {
+  enum class ExprValueKind {
     /// \brief An r-value expression (a pr-value in the C++11 taxonomy)
     /// produces a temporary value.
     VK_RValue,
@@ -109,89 +76,11 @@ namespace vlang {
     VK_XValue
   };
 
-  /// \brief A further classification of the kind of object referenced by an
-  /// l-value or x-value.
-  enum ExprObjectKind {
-    /// An ordinary object is located at an address in memory.
-    OK_Ordinary,
-
-    /// A bitfield object is a bitfield on a C or C++ record.
-    OK_BitField,
-
-    /// A vector component is an element or range of elements on a vector.
-    OK_VectorComponent
-  };
-
-  // \brief Describes the kind of template specialization that a
-  // particular template specialization declaration represents.
-  enum TemplateSpecializationKind {
-    /// This template specialization was formed from a template-id but
-    /// has not yet been declared, defined, or instantiated.
-    TSK_Undeclared = 0,
-    /// This template specialization was implicitly instantiated from a
-    /// template. (C++ [temp.inst]).
-    TSK_ImplicitInstantiation,
-    /// This template specialization was declared or defined by an
-    /// explicit specialization (C++ [temp.expl.spec]) or partial
-    /// specialization (C++ [temp.class.spec]).
-    TSK_ExplicitSpecialization,
-    /// This template specialization was instantiated from a template
-    /// due to an explicit instantiation declaration request
-    /// (C++11 [temp.explicit]).
-    TSK_ExplicitInstantiationDeclaration,
-    /// This template specialization was instantiated from a template
-    /// due to an explicit instantiation definition request
-    /// (C++ [temp.explicit]).
-    TSK_ExplicitInstantiationDefinition
-  };
-
-  /// \brief Thread storage-class-specifier.
-  enum ThreadStorageClassSpecifier {
-    TSCS_unspecified,
-    /// GNU __thread.
-    TSCS___thread,
-    /// C++11 thread_local. Implies 'static' at block scope, but not at
-    /// class scope.
-    TSCS_thread_local,
-    /// C11 _Thread_local. Must be combined with either 'static' or 'extern'
-    /// if used at block scope.
-    TSCS__Thread_local
-  };
-
-  /// \brief Storage classes.
-  enum StorageClass {
-    // These are legal on both functions and variables.
-    SC_None,
-    SC_Extern,
-    SC_Static,
-    SC_PrivateExtern,
-
-    // These are only legal on variables.
-    SC_OpenCLWorkGroupLocal,
-    SC_Auto,
-    SC_Register
-  };
-
-  /// \brief Checks whether the given storage class is legal for functions.
-  inline bool isLegalForFunction(StorageClass SC) {
-    return SC <= SC_PrivateExtern;
-  }
-
-  /// \brief Checks whether the given storage class is legal for variables.
-  inline bool isLegalForVariable(StorageClass SC) {
-    return true;
-  }
-
   /// \brief In-class initialization styles for non-static data members.
-  enum InClassInitStyle {
+  enum class InClassInitStyle {
     ICIS_NoInit,   ///< No in-class initializer.
     ICIS_CopyInit, ///< Copy initialization.
     ICIS_ListInit  ///< Direct list-initialization.
-  };
-
-  /// \brief CallingConv - Specifies the calling convention that a function uses.
-  enum CallingConv {
-    CC_Default
   };
 
 } // end namespace vlang

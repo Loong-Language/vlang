@@ -2,8 +2,6 @@ set(LLVM_LINK_COMPONENTS mc)
 
 add_vlang_library(vlangBasic
   CharInfo.cpp
-  Diagnostic.cpp
-  DiagnosticIDs.cpp
   FileManager.cpp
   FileSystemStatCache.cpp
   IdentifierTable.cpp
@@ -19,12 +17,7 @@ add_vlang_library(vlangBasic
   VersionTuple.cpp
   )
 
-add_dependencies(vlangBasic
-  VlangDiagnosticLex
-  VlangDiagnosticGroups
-  )
-
-# vlangBasic depends on the version.
+  # vlangBasic depends on the version.
 if (Subversion_FOUND AND EXISTS "${VLANG_SOURCE_DIR}/.svn")
   add_dependencies(vlangBasic vlang_revision_tag)
 endif()

@@ -16,7 +16,7 @@
 #ifndef LLVM_VLANG_FRONTEND_DIAGNOSTIC_RENDERER_H_
 #define LLVM_VLANG_FRONTEND_DIAGNOSTIC_RENDERER_H_
 
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 #include "vlang/Basic/LLVM.h"
 #include "vlang/Basic/SourceLocation.h"
 #include "llvm/ADT/Optional.h"

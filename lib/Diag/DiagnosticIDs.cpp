@@ -11,9 +11,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "vlang/Basic/DiagnosticIDs.h"
-#include "vlang/Basic/AllDiagnostics.h"
-#include "vlang/Basic/DiagnosticCategories.h"
+#include "vlang/Diag/DiagnosticIDs.h"
+#include "vlang/Diag/AllDiagnostics.h"
+#include "vlang/Diag/DiagnosticCategories.h"
 #include "vlang/Basic/SourceManager.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/Support/ErrorHandling.h"
@@ -71,10 +71,10 @@ static const StaticDiagInfoRec StaticDiagInfo[] = {
   { diag::ENUM, DEFAULT_MAPPING, CLASS, SFINAE, ACCESS,           \
     NOWERROR, SHOWINSYSHEADER, CATEGORY, GROUP,                   \
     STR_SIZE(DESC, uint16_t), DESC },
-#include "vlang/Basic/DiagnosticCommonKinds.inc"
-#include "vlang/Basic/DiagnosticFrontendKinds.inc"
-#include "vlang/Basic/DiagnosticLexKinds.inc"
-#include "vlang/Basic/DiagnosticParseKinds.inc"
+#include "vlang/Diag/DiagnosticCommonKinds.inc"
+#include "vlang/Diag/DiagnosticFrontendKinds.inc"
+#include "vlang/Diag/DiagnosticLexKinds.inc"
+#include "vlang/Diag/DiagnosticParseKinds.inc"
 #undef DIAG
   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 };
@@ -205,7 +205,7 @@ DiagnosticMappingInfo &DiagnosticsEngine::DiagState::getOrAddMappingInfo(
 static const StaticDiagCategoryRec CategoryNameTable[] = {
 #define GET_CATEGORY_TABLE
 #define CATEGORY(X, ENUM) { X, STR_SIZE(X, uint8_t) },
-#include "vlang/Basic/DiagnosticGroups.inc"
+#include "vlang/Diag/DiagnosticGroups.inc"
 #undef GET_CATEGORY_TABLE
   { 0, 0 }
 };
@@ -507,7 +507,7 @@ struct vlang::WarningOption {
 };
 
 #define GET_DIAG_ARRAYS
-#include "vlang/Basic/DiagnosticGroups.inc"
+#include "vlang/Diag/DiagnosticGroups.inc"
 #undef GET_DIAG_ARRAYS
 
 // Second the table of options, sorted by name for fast binary lookup.
@@ -515,7 +515,7 @@ static const WarningOption OptionTable[] = {
 #define GET_DIAG_TABLE
   { 0, "",                                               0, DiagSubGroup0 },
   //TODO: 
-#include "vlang/Basic/DiagnosticGroups.inc"
+#include "vlang/Diag/DiagnosticGroups.inc"
 #undef GET_DIAG_TABLE
 };
 static const size_t OptionTableSize =

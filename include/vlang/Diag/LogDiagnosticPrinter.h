@@ -10,7 +10,7 @@
 #ifndef LLVM_VLANG_FRONTEND_LOG_DIAGNOSTIC_PRINTER_H_
 #define LLVM_VLANG_FRONTEND_LOG_DIAGNOSTIC_PRINTER_H_
 
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 #include "vlang/Basic/SourceLocation.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/StringRef.h"

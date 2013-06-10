@@ -7,13 +7,13 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "vlang/Frontend/SerializedDiagnosticPrinter.h"
-#include "vlang/Basic/Diagnostic.h"
-#include "vlang/Basic/DiagnosticOptions.h"
+#include "vlang/Diag/SerializedDiagnosticPrinter.h"
+#include "vlang/Diag/Diagnostic.h"
+#include "vlang/Diag/DiagnosticOptions.h"
+#include "vlang/Diag/DiagnosticRenderer.h"
 #include "vlang/Basic/FileManager.h"
 #include "vlang/Basic/SourceManager.h"
 #include "vlang/Basic/Version.h"
-#include "vlang/Frontend/DiagnosticRenderer.h"
 #include "vlang/Lex/Lexer.h"
 #include "llvm/ADT/DenseSet.h"
 #include "llvm/ADT/SmallString.h"

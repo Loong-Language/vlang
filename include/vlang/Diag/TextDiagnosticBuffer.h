@@ -14,7 +14,7 @@
 #ifndef LLVM_VLANG_FRONTEND_TEXT_DIAGNOSTIC_BUFFER_H_
 #define LLVM_VLANG_FRONTEND_TEXT_DIAGNOSTIC_BUFFER_H_
 
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 #include <vector>
 
 namespace vlang {

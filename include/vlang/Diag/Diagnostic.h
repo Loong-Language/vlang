@@ -15,8 +15,8 @@
 #ifndef LLVM_VLANG_DIAGNOSTIC_H
 #define LLVM_VLANG_DIAGNOSTIC_H
 
-#include "vlang/Basic/DiagnosticIDs.h"
-#include "vlang/Basic/DiagnosticOptions.h"
+#include "vlang/Diag/DiagnosticIDs.h"
+#include "vlang/Diag/DiagnosticOptions.h"
 #include "vlang/Basic/SourceLocation.h"
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/DenseMap.h"

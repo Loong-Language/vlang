@@ -1,2 +1,2 @@
-add_subdirectory(Basic)
+add_subdirectory(Diag)
 add_subdirectory(Lex)

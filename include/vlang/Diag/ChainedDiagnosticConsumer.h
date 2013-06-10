@@ -10,7 +10,7 @@
 #ifndef LLVM_VLANG_FRONTEND_CHAINEDDIAGNOSTICCONSUMER_H
 #define LLVM_VLANG_FRONTEND_CHAINEDDIAGNOSTICCONSUMER_H
 
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 #include "llvm/ADT/OwningPtr.h"
 
 namespace vlang {

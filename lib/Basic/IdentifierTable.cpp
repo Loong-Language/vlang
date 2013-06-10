@@ -131,9 +131,6 @@ void IdentifierTable::AddKeywords(const LangOptions &LangOpts) {
    FLAGS, LangOpts, *this);
 #include "vlang/Basic/TokenKinds.def"
 
-	if (LangOpts.ParseUnknownAnytype)
-		AddKeyword("__unknown_anytype", tok::kw___unknown_anytype, KEYALL,
-		LangOpts, *this);
 }
 
 //===----------------------------------------------------------------------===//

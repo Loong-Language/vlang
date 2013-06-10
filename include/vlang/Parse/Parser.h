@@ -344,7 +344,7 @@ private:
   };
 
   /// \brief Consume any extra semi-colons until the end of the line.
-  void ConsumeExtraSemi(ExtraSemiKind Kind, unsigned TST = TST_unspecified);
+  void ConsumeExtraSemi(ExtraSemiKind Kind);
 
 public:
   //===--------------------------------------------------------------------===//

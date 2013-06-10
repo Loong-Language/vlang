@@ -12,5 +12,6 @@ add_dependencies(vlangParse
 
 target_link_libraries(vlangParse
   vlangBasic
+  vlangDiag
   vlangLex
   )

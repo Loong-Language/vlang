@@ -12,7 +12,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "vlang/Basic/SourceManager.h"
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 #include "vlang/Basic/FileManager.h"
 #include "vlang/Basic/SourceManagerInternals.h"
 #include "llvm/ADT/Optional.h"

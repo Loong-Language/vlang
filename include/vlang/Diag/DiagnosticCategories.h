@@ -15,7 +15,7 @@ namespace vlang {
     enum {
 #define GET_CATEGORY_TABLE
 #define CATEGORY(X, ENUM) ENUM,
-#include "vlang/Basic/DiagnosticGroups.inc"
+#include "vlang/Diag/DiagnosticGroups.inc"
 #undef CATEGORY
 #undef GET_CATEGORY_TABLE
       DiagCat_NUM_CATEGORIES

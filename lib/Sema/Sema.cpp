@@ -13,7 +13,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "vlang/Basic/FileManager.h"
-#include "vlang/Basic/PartialDiagnostic.h"
+#include "vlang/Diag/PartialDiagnostic.h"
 #include "vlang/Lex/CodeCompletionHandler.h"
 #include "vlang/Lex/HeaderSearch.h"
 #include "vlang/Lex/Preprocessor.h"

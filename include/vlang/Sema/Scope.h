@@ -14,7 +14,7 @@
 #ifndef LLVM_VLANG_SEMA_SCOPE_H
 #define LLVM_VLANG_SEMA_SCOPE_H
 
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 #include "llvm/ADT/SmallPtrSet.h"
 #include "llvm/ADT/SmallVector.h"
 

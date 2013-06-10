@@ -13,8 +13,3 @@ vlang_diag_gen(Parse)
 vlang_tablegen(DiagnosticGroups.inc -gen-vlang-diag-groups
   SOURCE Diagnostic.td
   TARGET VlangDiagnosticGroups)
-
-vlang_tablegen(DiagnosticIndexName.inc -gen-vlang-diags-index-name
-  SOURCE Diagnostic.td
-  TARGET VlangDiagnosticIndexName)
-

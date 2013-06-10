@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "vlang/Frontend/ChainedDiagnosticConsumer.h"
+#include "vlang/Diag/ChainedDiagnosticConsumer.h"
 
 using namespace vlang;
 

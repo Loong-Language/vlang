@@ -13,6 +13,8 @@
 let Component = "Parse" in {
 let CategoryName = "Parse Issue" in {
 
+def err_expected_top_decl            : Error<"expected top level design description">;
+
 // Semicolon errors
 def err_expected_semi_after          : Error<"expected ';' after %0">;
 def err_expected_semi_after_stmt     : Error<"expected ';' after statement">;

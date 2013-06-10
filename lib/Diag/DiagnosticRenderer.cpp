@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "vlang/Frontend/DiagnosticRenderer.h"
-#include "vlang/Basic/DiagnosticOptions.h"
+#include "vlang/Diag/DiagnosticRenderer.h"
+#include "vlang/Diag/DiagnosticOptions.h"
 #include "vlang/Basic/FileManager.h"
 #include "vlang/Basic/SourceManager.h"
 #include "vlang/Lex/Lexer.h"

@@ -12,7 +12,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "vlang/Lex/HeaderSearch.h"
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 #include "vlang/Basic/FileManager.h"
 #include "vlang/Basic/IdentifierTable.h"
 #include "vlang/Lex/HeaderMap.h"

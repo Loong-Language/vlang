@@ -14,7 +14,7 @@
 #ifndef LLVM_VLANG_LEX_PREPROCESSOR_H
 #define LLVM_VLANG_LEX_PREPROCESSOR_H
 
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 #include "vlang/Basic/IdentifierTable.h"
 #include "vlang/Basic/SourceLocation.h"
 #include "vlang/Basic/Systask.h"

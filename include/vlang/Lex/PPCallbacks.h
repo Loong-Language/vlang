@@ -15,7 +15,7 @@
 #ifndef LLVM_VLANG_LEX_PPCALLBACKS_H
 #define LLVM_VLANG_LEX_PPCALLBACKS_H
 
-#include "vlang/Basic/DiagnosticIDs.h"
+#include "vlang/Diag/DiagnosticIDs.h"
 #include "vlang/Basic/SourceLocation.h"
 #include "vlang/Lex/DirectoryLookup.h"
 #include "llvm/ADT/StringRef.h"

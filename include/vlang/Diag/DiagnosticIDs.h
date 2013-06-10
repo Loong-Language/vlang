@@ -49,7 +49,7 @@ namespace vlang {
     enum {
 #define DIAG(ENUM,FLAGS,DEFAULT_MAPPING,DESC,GROUP,\
              SFINAE,ACCESS,CATEGORY,NOWERROR,SHOWINSYSHEADER) ENUM,
-#include "vlang/Basic/DiagnosticCommonKinds.inc"
+#include "vlang/Diag/DiagnosticCommonKinds.inc"
       NUM_BUILTIN_COMMON_DIAGNOSTICS
 #undef DIAG
     };

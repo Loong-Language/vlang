@@ -10,7 +10,7 @@
 #ifndef LLVM_VLANG_FRONTEND_VERIFYDIAGNOSTICSCLIENT_H
 #define LLVM_VLANG_FRONTEND_VERIFYDIAGNOSTICSCLIENT_H
 
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 #include "vlang/Lex/Preprocessor.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/OwningPtr.h"

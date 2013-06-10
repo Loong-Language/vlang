@@ -51,20 +51,9 @@ LANGOPT(ConstStrings      , 1, 0, "const-qualified string support")
 LANGOPT(Freestanding, 1, 0, "freestanding implementation")
 LANGOPT(NoBuiltin         , 1, 0, "disable builtin functions")
 
-BENIGN_LANGOPT(DumpRecordLayouts , 1, 0, "dumping the layout of IRgen'd records")
-BENIGN_LANGOPT(DumpRecordLayoutsSimple , 1, 0, "dumping the layout of IRgen'd records in a simple form")
-BENIGN_LANGOPT(DumpVTableLayouts , 1, 0, "dumping the layouts of emitted vtables")
-LANGOPT(NoConstantCFStrings , 1, 0, "no constant CoreFoundation strings")
-BENIGN_LANGOPT(InlineVisibilityHidden , 1, 0, "hidden default visibility for inline C++ methods")
-BENIGN_LANGOPT(ParseUnknownAnytype, 1, 0, "__unknown_anytype")
 BENIGN_LANGOPT(DebuggerSupport , 1, 0, "debugger support")
 
 BENIGN_LANGOPT(SpellChecking , 1, 1, "spell-checking")
-LANGOPT(SinglePrecisionConstants , 1, 0, "treating double-precision floating point constants as single precision constants")
-LANGOPT(NoBitFieldTypeAlign , 1, 0, "bit-field type alignment")
-LANGOPT(HexagonQdsp6Compat , 1, 0, "hexagon-qdsp6 backward compatibility")
-
-BENIGN_LANGOPT(DelayedTemplateParsing , 1, 0, "delayed template parsing")
 
 BENIGN_LANGOPT(InstantiationDepth, 32, 256, 
                "maximum template instantiation depth")
@@ -76,8 +65,6 @@ BENIGN_LANGOPT(BracketDepth, 32, 256,
                "maximum bracket nesting depth")
 BENIGN_LANGOPT(NumLargeByValueCopy, 32, 0, 
         "if non-zero, warn about parameter or return Warn if parameter/return value is larger in bytes than this setting. 0 is no check.")
-
-BENIGN_LANGOPT(RetainCommentsFromSystemHeaders, 1, 0, "retain documentation comments from system headers in the AST")
 
 #undef LANGOPT
 #undef VALUE_LANGOPT

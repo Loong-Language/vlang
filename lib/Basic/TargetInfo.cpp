@@ -59,10 +59,6 @@ TargetInfo::TargetInfo(const std::string &T) : TargetOpts(), Triple(T)
   Int64Type = SignedLongLong;
   SigAtomicType = SignedInt;
   ProcessIDType = SignedInt;
-  UseSignedCharForObjCBool = true;
-  UseBitFieldTypeAlignment = true;
-  UseZeroLengthBitfieldAlignment = false;
-  ZeroLengthBitfieldBoundary = 0;
   HalfFormat = &llvm::APFloat::IEEEhalf;
   FloatFormat = &llvm::APFloat::IEEEsingle;
   DoubleFormat = &llvm::APFloat::IEEEdouble;
@@ -175,8 +171,6 @@ bool TargetInfo::isTypeSigned(IntType T) {
 /// Apply changes to the target information with respect to certain
 /// language options which change the target configuration.
 void TargetInfo::setForcedLangOptions(LangOptions &Opts) {
-  if (Opts.NoBitFieldTypeAlign)
-    UseBitFieldTypeAlignment = false;
 }
 
 //===----------------------------------------------------------------------===//

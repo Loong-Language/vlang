@@ -903,10 +903,10 @@ bool Preprocessor::ReadMacroDefinitionArgList(MacroInfo *MI, Token &Tok) {
       return true;
     default:
       // Handle keywords and identifiers here to accept things like
-      // #define Foo(for) for.
+      // `define Foo(for) for.
       IdentifierInfo *II = Tok.getIdentifierInfo();
       if (II == 0) {
-        // #define X(1
+        // `define X(1
         Diag(Tok, diag::err_pp_invalid_tok_in_arg_list);
         return true;
       }
@@ -1060,12 +1060,12 @@ void Preprocessor::HandleDefineDirective(Token &DefineTok) {
 
   } else {
     // Otherwise, read the body of a function-like macro.  While we are at it,
-    // check C99 6.10.3.2p1: ensure that # operators are followed by macro
+    // check C99 6.10.3.2p1: ensure that ` operators are followed by macro
     // parameters in function-like macro expansions.
     while (Tok.isNot(tok::eod)) {
       LastTok = Tok;
 
-      if (Tok.isNot(tok::hash) ) {
+      if (Tok.isNot(tok::tick) ) {
         MI->AddTokenToBody(Tok);
 
         // Get the next token of the macro.

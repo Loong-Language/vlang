@@ -10,7 +10,7 @@
 #ifndef LLVM_VLANG_FRONTENDDIAGNOSTIC_H
 #define LLVM_VLANG_FRONTENDDIAGNOSTIC_H
 
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 
 namespace vlang {
   namespace diag {
@@ -18,7 +18,7 @@ namespace vlang {
 #define DIAG(ENUM,FLAGS,DEFAULT_MAPPING,DESC,GROUP,\
              SFINAE,ACCESS,NOWERROR,SHOWINSYSHEADER,CATEGORY) ENUM,
 #define FRONTENDSTART
-#include "vlang/Basic/DiagnosticFrontendKinds.inc"
+#include "vlang/Diag/DiagnosticFrontendKinds.inc"
 #undef DIAG
       NUM_BUILTIN_FRONTEND_DIAGNOSTICS
     };

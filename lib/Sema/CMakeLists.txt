@@ -10,5 +10,6 @@ add_vlang_library(vlangSema
 
 target_link_libraries(vlangSema
   vlangBasic
+  vlangDiag
   vlangLex
   )

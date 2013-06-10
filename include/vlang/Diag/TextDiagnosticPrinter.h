@@ -15,7 +15,7 @@
 #ifndef LLVM_VLANG_FRONTEND_TEXT_DIAGNOSTIC_PRINTER_H_
 #define LLVM_VLANG_FRONTEND_TEXT_DIAGNOSTIC_PRINTER_H_
 
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 #include "vlang/Basic/LLVM.h"
 #include "llvm/ADT/IntrusiveRefCntPtr.h"
 #include "llvm/ADT/OwningPtr.h"

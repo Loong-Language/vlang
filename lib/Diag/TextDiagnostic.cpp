@@ -7,9 +7,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "vlang/Frontend/TextDiagnostic.h"
+#include "vlang/Diag/TextDiagnostic.h"
+#include "vlang/Diag/DiagnosticOptions.h"
 #include "vlang/Basic/CharInfo.h"
-#include "vlang/Basic/DiagnosticOptions.h"
 #include "vlang/Basic/FileManager.h"
 #include "vlang/Basic/SourceManager.h"
 #include "vlang/Lex/Lexer.h"

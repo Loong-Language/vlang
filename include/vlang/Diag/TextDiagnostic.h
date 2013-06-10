@@ -16,7 +16,7 @@
 #ifndef LLVM_VLANG_FRONTEND_TEXT_DIAGNOSTIC_H_
 #define LLVM_VLANG_FRONTEND_TEXT_DIAGNOSTIC_H_
 
-#include "vlang/Frontend/DiagnosticRenderer.h"
+#include "vlang/Diag/DiagnosticRenderer.h"
 
 namespace vlang {
 

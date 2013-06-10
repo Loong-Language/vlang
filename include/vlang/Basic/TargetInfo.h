@@ -139,31 +139,6 @@ protected:
           WIntType, Char16Type, Char32Type, Int64Type, SigAtomicType,
           ProcessIDType;
 
-  /// \brief Whether Objective-C's built-in boolean type should be signed char.
-  ///
-  /// Otherwise, when this flag is not set, the normal built-in boolean type is
-  /// used.
-  unsigned UseSignedCharForObjCBool : 1;
-
-  /// Control whether the alignment of bit-field types is respected when laying
-  /// out structures. If true, then the alignment of the bit-field type will be
-  /// used to (a) impact the alignment of the containing structure, and (b)
-  /// ensure that the individual bit-field will not straddle an alignment
-  /// boundary.
-  unsigned UseBitFieldTypeAlignment : 1;
-
-  /// \brief Whether zero length bitfields (e.g., int : 0;) force alignment of
-  /// the next bitfield.
-  ///
-  /// If the alignment of the zero length bitfield is greater than the member
-  /// that follows it, `bar', `bar' will be aligned as the type of the
-  /// zero-length bitfield.
-  unsigned UseZeroLengthBitfieldAlignment : 1;
-
-  /// If non-zero, specifies a fixed alignment value for bitfields that follow
-  /// zero length bitfield, regardless of the zero length bitfield type.
-  unsigned ZeroLengthBitfieldBoundary;
-
 public:
   IntType getSizeType() const { return SizeType; }
   IntType getIntMaxType() const { return IntMaxType; }
@@ -328,24 +303,6 @@ public:
   /// \brief Returns the name of the mcount instrumentation function.
   const char *getMCountName() const {
     return MCountName;
-  }
-
-  /// \brief Check whether the alignment of bit-field types is respected
-  /// when laying out structures.
-  bool useBitFieldTypeAlignment() const {
-    return UseBitFieldTypeAlignment;
-  }
-
-  /// \brief Check whether zero length bitfields should force alignment of
-  /// the next member.
-  bool useZeroLengthBitfieldAlignment() const {
-    return UseZeroLengthBitfieldAlignment;
-  }
-
-  /// \brief Get the fixed alignment value in bits for a member that follows
-  /// a zero length bitfield.
-  unsigned getZeroLengthBitfieldBoundary() const {
-    return ZeroLengthBitfieldBoundary;
   }
 
   /// \brief Check whether this target support '\#pragma options align=mac68k'.
@@ -630,39 +587,6 @@ public:
   VersionTuple getPlatformMinVersion() const { return PlatformMinVersion; }
 
   bool isBigEndian() const { return BigEndian; }
-
-  enum CallingConvMethodType {
-    CCMT_Unknown,
-    CCMT_Member,
-    CCMT_NonMember
-  };
-
-  /// \brief Gets the default calling convention for the given target and
-  /// declaration context.
-  virtual CallingConv getDefaultCallingConv(CallingConvMethodType MT) const {
-    // Not all targets will specify an explicit calling convention that we can
-    // express.  This will always do the right thing, even though it's not
-    // an explicit calling convention.
-    return CC_Default;
-  }
-
-  enum CallingConvCheckResult {
-    CCCR_OK,
-    CCCR_Warning
-  };
-
-  /// \brief Determines whether a given calling convention is valid for the
-  /// target. A calling convention can either be accepted, produce a warning 
-  /// and be substituted with the default calling convention, or (someday)
-  /// produce an error (such as using thiscall on a non-instance function).
-  virtual CallingConvCheckResult checkCallingConvention(CallingConv CC) const {
-    switch (CC) {
-      default:
-        return CCCR_Warning;
-      case CC_Default:
-        return CCCR_OK;
-    }
-  }
 
 protected:
   virtual uint64_t getPointerWidthV(unsigned AddrSpace) const {

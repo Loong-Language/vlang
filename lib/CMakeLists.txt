@@ -1,4 +1,5 @@
 add_subdirectory(Basic)
+add_subdirectory(Diag)
 add_subdirectory(Lex)
 add_subdirectory(Frontend)
 add_subdirectory(Parse)

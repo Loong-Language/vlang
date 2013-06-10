@@ -14,7 +14,7 @@
 #ifndef LLVM_VLANG_FRONTEND_UTILS_H
 #define LLVM_VLANG_FRONTEND_UTILS_H
 
-#include "vlang/Basic/Diagnostic.h"
+#include "vlang/Diag/Diagnostic.h"
 #include "llvm/ADT/IntrusiveRefCntPtr.h"
 #include "llvm/ADT/StringRef.h"
 

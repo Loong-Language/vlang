@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "vlang/Frontend/LogDiagnosticPrinter.h"
-#include "vlang/Basic/DiagnosticOptions.h"
+#include "vlang/Diag/LogDiagnosticPrinter.h"
+#include "vlang/Diag/DiagnosticOptions.h"
 #include "vlang/Basic/FileManager.h"
 #include "vlang/Basic/SourceManager.h"
 #include "llvm/ADT/SmallString.h"
